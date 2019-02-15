@@ -12,6 +12,7 @@ f (double x){
   return (pow (x, 2) + sin (0.48 * (x + 2))) / (exp (pow (x, 2)) + 0.38);
 }
 
+//Something WRONG! Don't know yet
 double nc_method(double a, double b, int n, int k){
     double S = 0.0, step = (b-a)/n, m = f(a) + f(b);
     #pragma omp parallel for reduction(+:S)

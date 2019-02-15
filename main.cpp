@@ -50,7 +50,7 @@ double rect_method(double a, double b, int n, int k){
     return S * h;
 }
 
-double calc(double (*ptr)(double, double, int, int), double a, double b, int n, int k){
+void calc(double (*ptr)(double, double, int, int), double a, double b, int n, int k){
   clock_t start = clock();
   double res = (*ptr)(a,b,n,k);
   cout << res << " " << (double)(clock() - start) << " ms" << endl;

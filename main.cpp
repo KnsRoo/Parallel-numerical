@@ -61,7 +61,6 @@ int main(int argc, char* argv[]){
   omp_set_num_threads(4);
   int n = 100000;
   double a = 0.4, b = 1.0;
-  double (*ptr)(double, double, int, int) = NULL;
   calc(&rect_method, a, b, n, 10);
   calc(&rect_method, a, b, n, 15);
   calc(&rect_method, a, b, n, 16);

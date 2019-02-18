@@ -20,9 +20,8 @@ void randdouble(double min, double max, double *arr, int n){
     }
 }
 
-// It's not my variant's function. Is the test function
 double g(double x, double y){
-    return 3*pow(y,2)*pow(sin(x),2);
+    return  ((y < x) and (y > x/2)) ? pow(x+y,2)/x : 0;
 }
 
 double f(double arg, double x){
@@ -38,13 +37,13 @@ double mc_method_x(function f, double arg, double a, double b, double c, double 
     return (b-a)*(d-c) * in/n;
 }
 
-double mc_method_xy(function f, double arg, double a, double b, double c, double d, int n){
+double mc_method_xy(function f, double a, double b, double c, double d, int n){
     double S = 0.0;
     double *x = new double[n], *y = new double[n];
     randdouble(a, b, x, n);
     randdouble(c, d, y, n);
     #pragma omp parallel for reduction(+:S)
-    for (int i = 0; i < n; i++){ if (y[i] < sin(x[i])){ S+=g(x[i],y[i]);}}
+    for (int i = 0; i < n; i++) { S+=g(x[i],y[i]);}
     return ((b-a) * (d-c))/n * S;
 }
 
@@ -57,23 +56,23 @@ double nc_method_x(function f, double arg, double a, double b, int n){
     return 3./8. * (f(arg, a) + f(arg, b) + 2*S1 + 3*S2) * step;
 }
 
-double nc_method_xy(double a, double b, double c, int n){
+double nc_method_xy(double a, double b, double c, double d, int n){
     double S1 = 0.0, S2 = 0.0, step = (b-a)/n, x, y;
     #pragma omp parallel for reduction(+:S1)
     for (int i = 1; i < n; i++){
         if (i % 3 == 0){
             x = a + i*step;
-            S1 += nc_method_x(&g, x, c, sin(x), n);
+            S1 += nc_method_x(&g, x, c, d, n);
         }
     }
     #pragma omp parallel for reduction(+:S2)
     for (int i = 1; i < n; i++){
         if (i % 3 != 0){
             x = a + i*step;
-            S2 += nc_method_x(&g, x, c, sin(x), n);
+            S2 += nc_method_x(&g, x, c, d, n);
         }
     }
-    return 3./8. * (g(a, b) + g(c, sin(c)) + 2*S1 + 3*S2) * step;
+    return 3./8. * (g(a, b) + g(c, d) + 2*S1 + 3*S2) * step;
 }
 
 double simpson_method_x(function f, double arg, double a, double b, int n){
@@ -85,19 +84,19 @@ double simpson_method_x(function f, double arg, double a, double b, int n){
     return (f(arg, a) + f(arg, b) + 2*S1 + 4*S2) * step/3.;
 }
 
-double simpson_method_xy(double a, double b, double c, int n){
+double simpson_method_xy(double a, double b, double c, double d, int n){
     double S1 = 0.0, S2 = 0.0, step = (b-a)/n, x,y;
     #pragma omp parallel for reduction(+:S1)
     for (int i = 2; i < n; i+=2){
         x = a + i*step;
-        S1 += simpson_method_x(&g, x, c, sin(x), n);
+        S1 += simpson_method_x(&g, x, c, d, n);
     }
     #pragma omp parallel for reduction(+:S2)
     for (int i = 1; i < n - 1; i+=2){
         x = a + i*step;
-        S2 += simpson_method_x(&g, x, c, sin(x), n);
+        S2 += simpson_method_x(&g, x, c, d, n);
     }
-    return (g(a, b) + g(c, sin(c)) + 2*S1 + 4*S2) * step/3.;
+    return (g(a, b) + g(c, d) + 2*S1 + 4*S2) * step/3.;
 }
 
 double rect_method_x(function f, double arg, double a, double b, int n, int k){
@@ -107,12 +106,12 @@ double rect_method_x(function f, double arg, double a, double b, int n, int k){
     return S * h;
 }
 
-double rect_method_xy(double a, double b, double c, int n, int k){
+double rect_method_xy(double a, double b, double c, double d, int n, int k){
     double S = 0.0, h = (b-a)/n; double x, y;
    #pragma omp parallel for reduction(+:S)
     for (int i = k%2; i < n - k%2; i++){
         x = a + i*h + (k%5)*h/2;
-        S += rect_method_x(&g, x, c, sin(x), n, k);
+        S += rect_method_x(&g, x, c, d, n, k);
     }
     return S * h;
 }
@@ -125,18 +124,18 @@ double trap_method_x(function f, double arg, double a, double b, int n){
     return (diff + S) * step;
 }
 
-double trap_method_xy(double a, double b, double c, int n){
+double trap_method_xy(double a, double b, double c, double d, int n){
     double S = 0.0, step = (b-a)/n;
-    double diff = (g(a,b) + g(c,sin(c))) / 2 * (b-a), x, y;
+    double diff = (g(a,b) + g(c,d)) / 2 * (b-a), x, y;
     #pragma omp parallel for reduction(+:S)
     for (int i = 1; i < n - 1; i++){
         x = a + i*step;
-        S += trap_method_x(&g, x, c, sin(x), n);
+        S += trap_method_x(&g, x, c, d, n);
     }
     return (diff + S) * step;
 }
 // I will use it in the future
-void calc(double (*ptr)(double, double, int, int), double a, double b, double eps, int k){
+void calc(double (*ptr)(function, double, double, double int), function f, double a, double b, double eps){
   clock_t start = clock();
   double res, delta = 1.0;
   int n = 1000, coef = (k == 0) ? 15. : 3.;
@@ -148,25 +147,25 @@ void calc(double (*ptr)(double, double, int, int), double a, double b, double ep
   cout << res << " " << fabs(delta/coef) << " " <<(double)(clock() - start) << " ms" << endl;
 }
 
-// BAD CODE ------->
+// BROKEN ------->
 int main(int argc, char* argv[]){
   omp_set_num_threads(4);
   double eps = 0.000001;
   double a = 0.4, b = 1.0;
   cout << "Result    " << "Delta       "  << "Time" << endl;
-  cout<< rect_method_x(&f, 0, a, b, 1000, 10) << endl;
-  cout<< rect_method_x(&f, 0, a, b, 1000, 15) << endl;
-  cout<< rect_method_x(&f, 0, a, b, 1000, 16) << endl;
-  cout<< trap_method_x(&f, 0, a, b, 1000) << endl;
-  cout<< simpson_method_x(&f, 0, a, b, 1000) << endl;
-  cout<< nc_method_x(&f, 0, a, b, 1000) << endl;
-  cout<< mc_method_x(&f, 0, a, b, 0.0, 1.0, 1000) << endl;
-  cout<< rect_method_xy(0, 3.1415926, 0, 1000, 10) << endl;
-  cout<< rect_method_xy(0, 3.1415926, 0, 1000, 15) << endl;
-  cout<< rect_method_xy(0, 3.1415926, 0, 1000, 16) << endl;
-  cout<< trap_method_xy(0, 3.1415926, 0, 1000) << endl;
-  cout<< simpson_method_xy(0, 3.1415926, 0, 1000) << endl;
-  cout<< nc_method_xy(0, 3.1415926, 0, 1000) << endl;
-  cout<< mc_method_xy(&g, 0, 0, 3.1415926, 0.0, 1.0, 100000) << endl;
+  //cout<< rect_method_x(&f, 0, a, b, 1000, 10) << endl;
+  //cout<< rect_method_x(&f, 0, a, b, 1000, 15) << endl;
+  //cout<< rect_method_x(&f, 0, a, b, 1000, 16) << endl;
+  //cout<<trap_method_x(&f, 0, a, b, eps); << endl;
+  //cout<< simpson_method_x(&f, 0, a, b, 1000) << endl;
+  //cout<< nc_method_x(&f, 0, a, b, 1000) << endl;
+  //cout<< mc_method_x(&f, 0, a, b, 0.0, 1.0, 1000) << endl;
+  //cout<< rect_method_xy(1, 3, 0, 3, 1000, 10) << endl;
+  //cout<< rect_method_xy(1, 3, 0, 3,1000, 15) << endl;
+  //cout<< rect_method_xy(1, 3, 0, 3, 1000, 16) << endl;
+  //cout<< trap_method_xy(1, 3, 0, 3, 1000) << endl;
+  //cout<< simpson_method_xy(1, 3, 0, 3, 1000) << endl;
+  //cout<< nc_method_xy(1, 3, 0, 3, 1000) << endl;
+  //cout<< mc_method_xy(&g, 1, 3, 0, 3, 1000000) << endl;
   return 0;
 }

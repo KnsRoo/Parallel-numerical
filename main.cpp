@@ -167,7 +167,7 @@ void calc(int method){
 int main(int argc, char* argv[]){
     cout << "Result    " << "Delta       "  << "Time" << endl;
     for (int i = 1; i <= 4; i++){
-        omp_set_num_threads(4);
+        omp_set_num_threads(i);
         for (int j = 1; j <= 14; j++){
             calc(j);
         }

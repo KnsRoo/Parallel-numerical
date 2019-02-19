@@ -136,7 +136,10 @@ double trap_method_xy(function g, double a, double b, double c, double d, int n)
 }
 
 void calc(int method){
-    double eps = 0.000001, res, delta = 1.0;
+    double eps = 0.0001, res, delta = 1.0, absdelta;
+    double max_abs_dfx = 0.4621316416755651;
+    double max_abs_ddfx = 1.3976907037089663;
+    double max_abs_ddddfx = 13.522628329646611;
     int n = 10000, coef = 3;
     double f_a = 0.4, f_b = 1.0, f_c = 0.0, f_d = 1.0;
     double g_a = 1.0, g_b = 3.0, g_c = 0.0, g_d = 3.0;
@@ -158,14 +161,31 @@ void calc(int method){
             case 13:{ res = nc_method_xy(&g, g_a, g_b, g_c, g_d, 3*n); delta = nc_method_xy(&g, g_a, g_b, g_c, g_d, 6*n) - res; } break;
             case 14:{ res = mc_method_xy(&g, g_a, g_b, g_c, g_d, n); delta = mc_method_xy(&g, g_a, g_b, g_c, g_d, 2*n) - res; } break;
         }
+        n *= 2;
     }
     auto endTime = chrono::steady_clock::now();
     auto runTime = chrono::duration_cast<std::chrono::duration<double>>(endTime-startTime);
-    cout<< res << " " << fabs(delta/coef) << " " << runTime.count() << endl;
+        switch (method){
+            case 1:{ absdelta = max_abs_dfx*(pow(f_b-f_a,2)/2); } break;
+            case 2:{ absdelta = max_abs_dfx*(pow(f_b-f_a,2)/2); } break;
+            case 3:{ absdelta = max_abs_ddfx*(pow(f_b-f_a,3)/24); } break;
+            case 4:{ absdelta = max_abs_ddfx*(pow(f_b-f_a,3)/12); } break;
+            case 5:{ absdelta = max_abs_ddddfx*(pow(f_b-f_a,5)/2880); } break;
+            case 6:{ absdelta = max_abs_ddddfx*(pow(f_b-f_a,5)/2880); } break;
+            case 7:{ absdelta = 3*(((f_b-f_a)/(2*sqrt(3)))/sqrt(n) + ((f_d-f_c)/(2*sqrt(3)))/sqrt(n))/2; } break; // Согласно равномерному закону распредления
+            case 8:{  } break;
+            case 9:{  } break;
+            case 10:{ } break;
+            case 11:{  } break;
+            case 12:{ } break;
+            case 13:{  } break;
+            case 14:{  } break;
+        }
+    cout<< res << " " << fabs(delta/coef) << " " << absdelta << " " << runTime.count() << endl;
 }
 
 int main(int argc, char* argv[]){
-    cout << "Result    " << "Delta       "  << "Time" << endl;
+    cout << "Result    " << "Delta       " << "Absdelta "  << "Time" << endl;
     for (int i = 1; i <= 4; i++){
         omp_set_num_threads(i);
         for (int j = 1; j <= 14; j++){

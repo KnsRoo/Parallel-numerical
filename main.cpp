@@ -110,7 +110,7 @@ double rect_method_x(function f, double arg, double a, double b, int n, int k){
 double rect_method_xy(function g, double a, double b, double c, double d, int n, int k){
     double x, S = 0.0, h = (b-a)/n;
    #pragma omp parallel for reduction(+:S)
-    for (int i = k%2; i < n - k%2; i++){
+    for (int i = k%2; i < n - k%3; i++){
         x = a + i*h + (k%5)*h/2;
         S += rect_method_x(g, x, c, d, n, k);
     }

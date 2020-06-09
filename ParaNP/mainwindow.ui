@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>515</width>
+    <height>379</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Решение экономических задач параллельными численными методами</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background: #faf8fb;</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QPushButton" name="set">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>230</y>
+      <width>491</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	background: #5d9cec;
+	outline: none;
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+	font-weight: bold;
+	width: 100px;
+	height: 30px;
+	color: white;
+	border-radius: 3px;
+	border: none;
+}
+
+QPushButton:hover{
+	background: #4a89dc;
+}
+
+QPushButton:pressed{
+	background: #5d9cec;
+}
+
+QPushButton:disabled{
+	background: #96a0ad;
+}</string>
+    </property>
+    <property name="text">
+     <string>Посчитать</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="method">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>140</y>
+      <width>491</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox{
+	height: 30px;
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+	border-style: solid;
+	border-radius: 2px;
+	border-width: 1px;
+	border-color: #3aafda;
+}
+
+QComboBox:disabled{
+	color: #96a0ad;
+	border-color: #96a0ad;
+}
+
+QComboBox:drop-down 
+{
+    border: 0px;
+}
+
+QComboBox:down-arrow {
+    image: url(&quot;interface/60995.png&quot;);
+    margin-right: 5px;
+    width: 8px;
+    height: 8px;
+}
+
+QComboBox:down-arrow:on {
+	margin-right: 5px;
+    image: url(&quot;interface/60696.png&quot;);
+    width: 8px;
+    height: 8px;
+}</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Левых прямоугольников</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Правых прямоугольников</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Средних прямоугольников</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Трапеций</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Симпсона</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Монте Карло</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLineEdit" name="result">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>290</y>
+      <width>221</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+	background: white;
+	border-style: solid;
+	border-radius: 2px;
+	border-width: 1px;
+	border-color: #96a0ad;
+}</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="gamma">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>290</y>
+      <width>221</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+	background: white;
+	border-style: solid;
+	border-radius: 2px;
+	border-width: 1px;
+	border-color: #96a0ad;
+}</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>270</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Результат</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>270</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Погрешность</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="parts">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>491</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Количество разбиений: 2</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="slider">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>491</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QSlider::handle:horizontal {
+    background: #5d9cec;
+}</string>
+    </property>
+    <property name="minimum">
+     <number>2</number>
+    </property>
+    <property name="maximum">
+     <number>1000000</number>
+    </property>
+    <property name="singleStep">
+     <number>2</number>
+    </property>
+    <property name="pageStep">
+     <number>2</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+    <property name="sliderPosition">
+     <number>2</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickInterval">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="parts_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>481</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-size: 14px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Метод</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>491</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-weight: bold;
+	font-size: 14px;
+}</string>
+    </property>
+    <property name="title">
+     <string>Задачи</string>
+    </property>
+    <widget class="QRadioButton" name="f">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>90</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QRadioButton{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+QRadioButton::indicator::unchecked {
+    image: url(&quot;interface/rad1.png&quot;);
+}
+
+QRadioButton::indicator:unchecked:hover {
+    image: url(&quot;interface/rad4.png&quot;);
+}
+
+QRadioButton::indicator:unchecked:pressed {
+    image: url(&quot;interface/rad6.png&quot;);
+}
+
+QRadioButton::indicator::checked {
+    image: url(&quot;interface/rad2.png&quot;);
+}
+
+QRadioButton::indicator:checked:hover {
+    image: url(&quot;interface/rad3.png&quot;);
+}
+
+QRadioButton::indicator:checked:pressed {
+    image: url(&quot;interface/rad5.png&quot;);
+}</string>
+     </property>
+     <property name="text">
+      <string>Задача 1</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="k">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>90</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QRadioButton{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+QRadioButton::indicator::unchecked {
+    image: url(&quot;interface/rad1.png&quot;);
+}
+
+QRadioButton::indicator:unchecked:hover {
+    image: url(&quot;interface/rad4.png&quot;);
+}
+
+QRadioButton::indicator:unchecked:pressed {
+    image: url(&quot;interface/rad6.png&quot;);
+}
+
+QRadioButton::indicator::checked {
+    image: url(&quot;interface/rad2.png&quot;);
+}
+
+QRadioButton::indicator:checked:hover {
+    image: url(&quot;interface/rad3.png&quot;);
+}
+
+QRadioButton::indicator:checked:pressed {
+    image: url(&quot;interface/rad5.png&quot;);
+}</string>
+     </property>
+     <property name="text">
+      <string>Задача 2</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="g">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>90</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QRadioButton{
+	font-family: &quot;HelveticaNeueCyr&quot;;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+QRadioButton::indicator::unchecked {
+    image: url(&quot;interface/rad1.png&quot;);
+}
+
+QRadioButton::indicator:unchecked:hover {
+    image: url(&quot;interface/rad4.png&quot;);
+}
+
+QRadioButton::indicator:unchecked:pressed {
+    image: url(&quot;interface/rad6.png&quot;);
+}
+
+QRadioButton::indicator::checked {
+    image: url(&quot;interface/rad2.png&quot;);
+}
+
+QRadioButton::indicator:checked:hover {
+    image: url(&quot;interface/rad3.png&quot;);
+}
+
+QRadioButton::indicator:checked:pressed {
+    image: url(&quot;interface/rad5.png&quot;);
+}</string>
+     </property>
+     <property name="text">
+      <string>Задача 3</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>121</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(&quot;interface/f1.png&quot;) 0 0 0 0 stretch stretch;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>30</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(&quot;interface/f2.png&quot;) 0 0 0 0 stretch stretch;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>30</y>
+       <width>121</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(&quot;interface/f3.png&quot;) 0 0 0 0 stretch stretch;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>515</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

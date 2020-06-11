@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QFontDatabase::addApplicationFont("interface/HelveticaNeueCyr-Roman.ttf");
+    QFontDatabase::addApplicationFont("interface/HelveticaNeueCyr-Bold.ttf");
     MainWindow w;
     w.show();
 

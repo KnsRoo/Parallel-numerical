@@ -7,7 +7,7 @@ def build_plots(data, max_y_time, name, max_y_sp = 4, max_y_ep = 2):
 	titles = {"Left rect":   "Метод левых прямоугольников",
 			  "Right rect":	 "Метод правых прямоугольников",
 			  "Middle rect": "Метод средних прямоугольников",
-			  "Trap":	     "Метод Трапеций",
+			  "Trap":        "Метод Трапеций",
 			  "Simpson":	 "Метод Симпсона",
 			  "Monte Carlo": "Метод Монте-Карло"}
 	for method in sorted(set(data['Method'])):

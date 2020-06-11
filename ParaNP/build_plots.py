@@ -1,22 +1,21 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
-def build_plots(data, max_y_time, size, max_y_sp = 4, max_y_ep = 2):
-	titles = {"Left rect": "Метод левых прямоугольников",
+def build_plots(data, max_y_time, name, max_y_sp = 4, max_y_ep = 2):
+	titles = {"Left rect":   "Метод левых прямоугольников",
 			  "Right rect":	 "Метод правых прямоугольников",
-			  "Middle rect":	 "Метод средних прямоугольников",
-			  "Trap":	 "Метод Трапеций",
+			  "Middle rect": "Метод средних прямоугольников",
+			  "Trap":	     "Метод Трапеций",
 			  "Simpson":	 "Метод Симпсона",
-			  "Monte Carlo":	 "Метод Монте-Карло"}
+			  "Monte Carlo": "Метод Монте-Карло"}
 	for method in sorted(set(data['Method'])):
 		sub_data = data.loc[data['Method'] == method]
 		fig = plt.figure(figsize=(8, 6), dpi=100)
+
 		rt_subplt = fig.add_subplot(211)
 		Sp_subplt = fig.add_subplot(223)
 		Ep_subplt = fig.add_subplot(224)
-
 		rt_subplt.set_title(titles[method])
 		rt_subplt.set_xlabel('Число потоков')
 		rt_subplt.set_ylabel('Время выполнения')
@@ -40,14 +39,12 @@ def build_plots(data, max_y_time, size, max_y_sp = 4, max_y_ep = 2):
 		                       marker=".", label="{dim}".format(dim=dimension))
 		rt_subplt.legend(loc = "upper right")
 		plt.subplots_adjust(wspace=0.5, hspace=0.6)
-		if size == 1: fig.savefig('1_'+ method + '.png')
-		if size == 2: fig.savefig('2_'+ method + '.png')
+		fig.savefig(name + method + '.png')
+
 
 
 if __name__ == '__main__':
-	data_1 = pd.read_csv('result1.csv')
-	data_2 = pd.read_csv('result2.csv')
-	max_time = max(data_1['RunTime'])
-	build_plots(data_1,max_time, 1)
-	max_time = max(data_2['RunTime'])
-	build_plots(data_2,max_time, 2)
+	data_1, data_2 = pd.read_csv('result1.csv'), pd.read_csv('result2.csv')
+	max_t1,max_t2 = max(data_1['RunTime']),max(data_2['RunTime'])
+	build_plots(data_1,max_t1, "1_")
+	build_plots(data_2,max_t2, "2_")

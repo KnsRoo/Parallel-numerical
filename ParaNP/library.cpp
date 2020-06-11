@@ -144,9 +144,9 @@ double calculate(int method, int parts, bool first){
 
 double inaccuracy_xy(int method, int parts){
     double LOWER_LIMIT = 0.0, UPPER_LIMIT = 4.0,
-             DOWN_LINE = 0.0,     UP_LINE = 2.0;
-    double dfx = 1.0, dfy = 4.0,
-           d2fx = 0.25, d2fy = 2.0,
+           DOWN_LINE   = 0.0, UP_LINE     = 2.0;
+    double dfx  = 1.0,      dfy  = 4.0,
+           d2fx = 0.25,     d2fy = 2.0,
            d4fx = 0.015625, d4fy = 3.0;
     double result = 0.0;
     switch (method) {

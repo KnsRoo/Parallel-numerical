@@ -122,11 +122,11 @@ double calculate(int method, int parts, bool first){
     function func;
     if (first){
         LOWER_LIMIT = 0.0, UPPER_LIMIT = 8.0,
-        DOWN_LINE   = 0.0, UP_LINE     = 5.0;
+        DOWN_LINE   = 0.0, UP_LINE     = 10.0;
         func = &f;
     } else {
         LOWER_LIMIT = 0.0, UPPER_LIMIT = 15.0,
-        DOWN_LINE   = 0.0, UP_LINE     = 10.0;
+        DOWN_LINE   = 0.0, UP_LINE     = 100.0;
         func = &k;
     }
     double result = 0;
@@ -144,7 +144,7 @@ double calculate(int method, int parts, bool first){
 
 double inaccuracy_xy(int method, int parts){
     double LOWER_LIMIT = 0.0, UPPER_LIMIT = 4.0,
-           DOWN_LINE   = 0.0, UP_LINE     = 2.0;
+           DOWN_LINE = 0.0,   UP_LINE = 2.0;
     double dfx  = 1.0,      dfy  = 4.0,
            d2fx = 0.25,     d2fy = 2.0,
            d4fx = 0.015625, d4fy = 3.0;
@@ -155,7 +155,7 @@ double inaccuracy_xy(int method, int parts){
         case 2: result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(24*pow(parts,2))+d2fy*(pow(UP_LINE-DOWN_LINE,3))/(24*pow(parts,2)); break;
         case 3: result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(12*pow(parts,2))+d2fy*(pow(UP_LINE-DOWN_LINE,3))/(12*pow(parts,2)); break;
         case 4: result = (d4fx*(pow(UPPER_LIMIT-LOWER_LIMIT,5)))/(2880*pow(parts,4))+(d4fy*(pow(UP_LINE-DOWN_LINE,5)))/(2880*pow(parts,4)); break;
-        case 5: result = 3*sqrt((pow((UPPER_LIMIT-LOWER_LIMIT),2)/(12*parts)); break;
+        case 5: result = 3*sqrt((pow((UPPER_LIMIT-LOWER_LIMIT),2)/(12*parts))); break;
     default: break;
     }
     return result;
@@ -180,7 +180,7 @@ double inaccuracy(int method, int parts, bool first){
         case 2: result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(24*pow(parts,2)); break;
         case 3: result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(12*pow(parts,2)); break;
         case 4: result = d4fx*(pow(UPPER_LIMIT-LOWER_LIMIT,5))/(2880*pow(parts,4)); break;
-        case 5: result = 3*sqrt((pow((UPPER_LIMIT-LOWER_LIMIT),2)/(12*parts)); break;
+        case 5: result = 3*sqrt((pow((UPPER_LIMIT-LOWER_LIMIT),2)/(12*parts))); break;
     default: result = 0.0; break;
     }
     return result;

@@ -9,10 +9,30 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->set, SIGNAL(clicked()), this, SLOT(OnSetClicked()));
+    connect(ui->f, SIGNAL(clicked()), this, SLOT(OnFSClicked()));
+    connect(ui->k, SIGNAL(clicked()), this, SLOT(OnFSClicked()));
+    connect(ui->g, SIGNAL(clicked()), this, SLOT(OnTClicked()));
     connect(ui->slider, SIGNAL(sliderReleased()), this, SLOT(OnSliderReleased()));
     connect(ui->slider, SIGNAL(valueChanged(int)), this, SLOT(OnSliderReleased()));
     connect(ui->method, SIGNAL(currentIndexChanged(int)), this, SLOT(OnComboChanged()));
 }
+
+void MainWindow::OnFSClicked(){
+    if (ui->method->currentIndex() == 5){
+        ui->slider->setMaximum(10000000);
+    }
+    else
+        ui->slider->setMaximum(1000000);
+}
+
+void MainWindow::OnTClicked(){
+    if (ui->method->currentIndex() == 5){
+        ui->slider->setMaximum(10000000);
+    }
+    else
+        ui->slider->setMaximum(100000);
+}
+
 
 void MainWindow::OnComboChanged(){
     if (ui->g->isChecked()){

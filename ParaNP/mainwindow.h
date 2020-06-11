@@ -22,6 +22,8 @@ public slots:
     void OnSetClicked();
     void OnSliderReleased();
     void OnComboChanged();
+    void OnFSClicked();
+    void OnTClicked();
 
 private:
     Ui::MainWindow *ui;

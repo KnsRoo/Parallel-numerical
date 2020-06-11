@@ -1,0 +1,167 @@
+\documentclass{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{tabularx}
+\graphicspath{ {./images/} }
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=2cm, bmargin=2cm, lmargin=2.5cm, rmargin=1.5cm}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+ 
+ % Цвета для гиперссылок
+\definecolor{linkcolor}{HTML}{799B03} % цвет ссылок
+\definecolor{urlcolor}{HTML}{799B03} % цвет гиперссылок
+ 
+\hypersetup{pdfstartview=FitH,  linkcolor=linkcolor,urlcolor=urlcolor, colorlinks=true}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{
+language = C++,
+style = mystyle,
+extendedchars=\true}
+
+
+
+\title{Оценка погрешности алгоритмов численного интегрирования на языке С++ с использованием OpenMP}
+\author{Оришин И.C.}
+\date{Июнь 2020}
+
+
+\begin{document}
+
+\maketitle
+\newpage
+\section{Погрешности формул численного интегрирования}
+\subsection{Общая формула погрешностей}
+Для оценки погрешности квадратурных и кубатурных формул обычно используется 
+следующая формула оценки:
+\begin{center}
+$$\delta = max(|f^{(n)}_{x_i}(x_1,...,x_s)|)\frac{(b-a)^k}{CN^n} $$
+\end{center}
+
+где:
+\begin{itemize}
+  \item $f(x_1,...,x_s)$ – подинтегральная функция;
+  \item s – количество независимых переменных;
+  \item n – порядок производной;
+  \item b – верхний предел интегрирования;
+  \item a - нижний предел интегрирования;
+  \item k - степень, в которую возводится разница пределови интегрирования;
+  \item С - некоторая константа;
+  \item N - количество разбиений.
+\end{itemize}
+Разным методам соответствуют разные значения параметров.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+Метод  & n & k & C \\ \hline
+Левых прямоугольников & 1    & 2    & 2    \\ \hline
+Правых прямоугольников & 1    & 2    & 2    \\ \hline
+Средних прямоугольников & 2    & 3    & 24    \\ \hline
+Трапеций & 2    & 3    & 12    \\ \hline
+Симпсона & 4    & 5    & 2880    \\ \hline
+Ньютона-Котеса & 4    & 5    & 2880    \\ \hline
+\end{tabular}
+\end{table}
+\subsection{Погрешность метода Монте-Карло}
+Для метода Монте-Карло погрешность можно оценить следующим образом:
+$$\delta = 3\sqrt{\frac{D[X]}{N}} $$
+где D[X] - дисперсия случайной величины, а N - количество разбиений.
+Метод который используется для генерации чисел, использует
+std::uniform\text{_}real\text{_}distribution<>, что в статистике
+соответствует равномерному распределению. Дисперсия равномерного распределения
+равна:
+
+$$ \delta = \frac{(b-a)^2}{12} $$
+
+Следовательно формула для оценки погрешности примет вид:
+
+$$\delta = 3\sqrt{\frac{(b-a)^2}{12N}} $$
+
+\subsection{Погрешности одномерных методов}
+Подставляя в формулу известные константы из таблицы в общую формулу получим:
+для методов левых и правых прямоугольников:
+$$\delta = max(|f'_{x}(x)|)\frac{(b-a)^2}{2N} $$
+для метода средних прямоугольников:
+$$\delta = max(|f''_{x}(x)|)\frac{(b-a)^3}{24N^2} $$
+для метода трапеций:
+$$\delta = max(|f''_{x}(x)|)\frac{(b-a)^3}{12N^2} $$
+для методов Симпсона и Ньютона-Котеса:
+$$\delta = max(|f^{(4)}_{x}(x)|)\frac{(b-a)^5}{2880N^4} $$
+Для одномерного метода Монте-Карло формула остается неизменной.
+\subsection{Погрешности двумерных методов}
+Погрешности двумерных методов, ничем не отличаются. Идея в следующем:
+\begin{itemize}
+  \item посчитать погрешность по переменной x;
+  \item посчитать погрешность по переменной y;
+  \item сложить результаты.
+\end{itemize}
+Итого имеем для методов левых и правых прямоугольников:
+$$\delta = max(|f'_{x}(x)|)\frac{(b-a)^2}{2N}+max(|f'_{y}(y)|)\frac{(d-c)^2}{2N}  $$
+для метода средних прямоугольников:
+$$\delta = max(|f''_{x}(x)|)\frac{(b-a)^3}{24N^2}+max(|f''_{y}(y)|)\frac{(d-c)^3}{24N^2} $$
+для метода трапеций:
+$$\delta = max(|f''_{x}(x)|)\frac{(b-a)^3}{12N^2}+max(|f''_{y}(y)|)\frac{(d-c)^3}{12N^2} $$
+для методов Симпсона и Ньютона-Котеса:
+$$\delta = max(|f^{(4)}_{x}(x)|)\frac{(b-a)^5}{2880N^4}+max(|f^{(4)}_{y}(y)|)\frac{(b-a)^5}{2880N^4} $$
+Для двумерного метода Монте-Карло формула остается неизменной.
+\subsection{Программная реализация формул}
+Для погрешностей заранее посчитаны максимальные абсолютные значения функций(dfx, d2fx, d4fx, dfy, d2fy, d4fy).
+Ознакомться с кодом можно здесь:
+\newline
+\href{https://github.com/KnsRoo/Parallel-numerical/blob/master/ParaNP/diffs.py}{https://github.com/KnsRoo/Parallel-numerical/blob/master/ParaNP/diffs.py}
+\begin{lstlisting}
+    //Монте-Карло
+    result = 3*sqrt((pow((UPPER_LIMIT-LOWER_LIMIT),2)/12*parts);
+    //Одномерные
+    //Левых и правых
+    result = dfx*(pow(UPPER_LIMIT-LOWER_LIMIT,2))/(2*parts)
+    //Средних
+    result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(24*pow(parts,2));
+    //Трапеций
+    result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(12*pow(parts,2));
+    //Симпсона
+    result = d4fx*(pow(UPPER_LIMIT-LOWER_LIMIT,5))/(2880*pow(parts,4));
+    //Двумерные
+    //Левых и правых
+    result = dfx*(pow(UPPER_LIMIT-LOWER_LIMIT,2))/(2*parts)+dfy*(pow(UP_LINE-DOWN_LINE,2))/(2*parts);
+    //Средних
+    result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(24*pow(parts,2))+d2fy*(pow(UP_LINE-DOWN_LINE,3))/(24*pow(parts,2));
+    //Трапеций
+    result = d2fx*(pow(UPPER_LIMIT-LOWER_LIMIT,3))/(12*pow(parts,2))+d2fy*(pow(UP_LINE-DOWN_LINE,3))/(12*pow(parts,2));
+    //Симпсона
+    result = (d4fx*(pow(UPPER_LIMIT-LOWER_LIMIT,5)))/(2880*pow(parts,4))+(d4fy*(pow(UP_LINE-DOWN_LINE,5)))/(2880*pow(parts,4));
+\end{lstlisting}
+\end{document}

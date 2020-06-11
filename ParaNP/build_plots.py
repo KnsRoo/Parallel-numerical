@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 def build_plots(data, max_y_time, name, max_y_sp = 4, max_y_ep = 2):
 	titles = {"Left rect":   "Метод левых прямоугольников",
@@ -46,5 +47,7 @@ def build_plots(data, max_y_time, name, max_y_sp = 4, max_y_ep = 2):
 if __name__ == '__main__':
 	data_1, data_2 = pd.read_csv('result1.csv'), pd.read_csv('result2.csv')
 	max_t1,max_t2 = max(data_1['RunTime']),max(data_2['RunTime'])
-	build_plots(data_1,max_t1, "1_")
-	build_plots(data_2,max_t2, "2_")
+	if not os.path.exists('plots'):
+		os.mkdir('plots')
+	build_plots(data_1,max_t1, "plots/1d_")
+	build_plots(data_2,max_t2, "plots/2d_")
